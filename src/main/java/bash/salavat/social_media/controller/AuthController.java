@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
@@ -56,6 +57,16 @@ public class AuthController {
         }
     }
 
+    public boolean checkIfCanEdit(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) return false;
+        String username = authentication.getName();
+        if (username == null) return false;
+        User user = userService.loadUserByUsername(username);
+        if (user == null) return false;
+        return user.getId().equals(id);
+    }
+
     @GetMapping("/profile")
     public String showProfile(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,6 +74,17 @@ public class AuthController {
         User user = userService.loadUserByUsername(username);
 
         model.addAttribute("user", user);
+        model.addAttribute("canEdit", checkIfCanEdit(user.getId()));
+        return "profile";
+    }
+
+    @GetMapping("/profile/{id}")
+    public String showProfile(Model model, @PathVariable("id") String idStr) {
+        Long id = Long.parseLong(idStr);
+        User user = userService.loadUserById(id);
+
+        model.addAttribute("user", user);
+        model.addAttribute("canEdit", checkIfCanEdit(id));
         return "profile";
     }
 
