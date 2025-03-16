@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Profile</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="container profile-container">
+  <!-- Profile Header -->
+  <div class="profile-header">
+    <div class="profile-avatar">
+      <img th:src="${user.profilePictureUrl ?: '/images/default-avatar.jpg'}"
+           alt="Profile Picture" class="avatar-img">
+      <a href="#" class="edit-avatar"><i class="fas fa-camera"></i></a>
+    </div>
+    <h1 th:text="${user.firstName + ' ' + user.lastName}">User Name</h1>
+    <p class="username" th:text="'@' + ${user.username}"></p>
+  </div>
+
+  <!-- Profile Info Section -->
+  <div class="profile-section">
+    <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
+    <div class="profile-info-grid">
+      <div class="info-item">
+        <label>Email:</label>
+        <p th:text="${user.email}"></p>
+      </div>
+      <div class="info-item">
+        <label>Member Since:</label>
+        <p th:text="${#temporals.format(user.createdAt, 'MMMM dd, yyyy')}"></p>
+      </div>
+      <div class="info-item">
+        <label>Last Updated:</label>
+        <p th:text="${#temporals.format(user.updatedAt, 'MMMM dd, yyyy HH:mm')}"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bio Section -->
+  <div class="profile-section" th:if="${user.bio}">
+    <h2><i class="fas fa-book-open"></i> Bio</h2>
+    <p class="bio-content" th:text="${user.bio}"></p>
+  </div>
+
+  <!-- Social Stats -->
+  <div class="profile-stats">
+    <div class="stat-item">
+      <span class="stat-number" th:text="${user.followers.size()}">0</span>
+      <span class="stat-label">Followers</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-number" th:text="${user.following.size()}">0</span>
+      <span class="stat-label">Following</span>
+    </div>
+  </div>
+
+  <!-- Edit Button -->
+  <div class="profile-actions">
+    <a th:href="@{/profile/edit}" class="btn btn-edit">
+      <i class="fas fa-edit"></i> Edit Profile
+    </a>
+  </div>
+</div>
+</body>
+</html>
