@@ -1,5 +1,6 @@
 package bash.salavat.social_media.controller;
 
+import bash.salavat.social_media.dto.ProfileEditDTO;
 import bash.salavat.social_media.dto.RegistrationDTO;
 import bash.salavat.social_media.model.User;
 import bash.salavat.social_media.service.UserService;
@@ -20,6 +21,39 @@ public class AuthController {
 
     public AuthController(UserService userService) {
         this.userService = userService;
+    }
+
+    @GetMapping("/profile/edit")
+    public String showEditProfileForm(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User currentUser = userService.loadUserByUsername(authentication.getName());
+
+        ProfileEditDTO profileEditDTO = new ProfileEditDTO();
+        profileEditDTO.setFirstName(currentUser.getFirstName());
+        profileEditDTO.setLastName(currentUser.getLastName());
+        profileEditDTO.setBio(currentUser.getBio());
+        profileEditDTO.setProfilePictureUrl(currentUser.getProfilePictureUrl());
+
+        model.addAttribute("profileEditDTO", profileEditDTO);
+        return "edit-profile";
+    }
+
+    @PostMapping("/profile/edit")
+    public String updateProfile(@Valid @ModelAttribute("profileEditDTO") ProfileEditDTO profileEditDTO,
+                                BindingResult result,
+                                Model model) {
+        if (result.hasErrors()) {
+            return "edit-profile";
+        }
+
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            userService.updateUserProfile(authentication.getName(), profileEditDTO);
+            return "redirect:/profile?success";
+        } catch (Exception e) {
+            model.addAttribute("error", "Error updating profile: " + e.getMessage());
+            return "edit-profile";
+        }
     }
 
     @GetMapping("/profile")

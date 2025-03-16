@@ -1,5 +1,6 @@
 package bash.salavat.social_media.service;
 
+import bash.salavat.social_media.dto.ProfileEditDTO;
 import bash.salavat.social_media.dto.RegistrationDTO;
 import bash.salavat.social_media.model.User;
 import bash.salavat.social_media.repo.UserRepository;
@@ -17,6 +18,18 @@ public class UserService implements UserDetailsService {
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public void updateUserProfile(String username, ProfileEditDTO profileEditDTO) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        user.setFirstName(profileEditDTO.getFirstName());
+        user.setLastName(profileEditDTO.getLastName());
+        user.setBio(profileEditDTO.getBio());
+        user.setProfilePictureUrl(profileEditDTO.getProfilePictureUrl());
+
+        userRepository.save(user);
     }
 
     public void registerUser(RegistrationDTO registrationDTO) {
