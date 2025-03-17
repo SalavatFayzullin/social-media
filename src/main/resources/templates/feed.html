@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="feed-header">
+        <h1>Your Feed</h1>
+        <a th:href="@{/posts/create}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Create New Post
+        </a>
+    </div>
+
+    <div class="posts-list">
+        <div th:each="post : ${posts}" class="post-card">
+            <div class="post-header">
+                <img th:src="${post.author.profilePictureUrl}"
+                     class="post-author-avatar">
+                <div class="post-author-info">
+                    <a th:href="@{'/profile/' + ${post.author.id}}"
+                       th:text="${post.author.username}"></a>
+                    <small th:text="${#temporals.format(post.createdAt, 'MMM dd, yyyy HH:mm')}"></small>
+                </div>
+            </div>
+
+            <div class="post-content" th:text="${post.content}"></div>
+
+            <div th:if="${post.imageUrl}" class="post-image">
+                <img th:src="${post.imageUrl}" alt="Post image">
+            </div>
+
+            <div class="post-actions">
+                <button class="btn btn-like">
+                    <i class="far fa-heart"></i>
+                    <span th:text="${post.likes.size()}"></span>
+                </button>
+                <button class="btn btn-comment">
+                    <i class="far fa-comment"></i>
+                    <span th:text="${post.comments.size()}"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

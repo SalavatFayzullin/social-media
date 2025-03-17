@@ -195,8 +195,9 @@ body {
 
 .edit-avatar {
     position: absolute;
-    bottom: 10px;
-    right: 10px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     background: var(--primary-color);
     color: white;
     width: 35px;
@@ -206,6 +207,13 @@ body {
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    transition: opacity 0.2s ease;
+    opacity: 0;
+}
+
+.edit-avatar:hover {
+    opacity: 1;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
 .profile-section {
@@ -317,4 +325,105 @@ body {
 textarea.form-control {
     resize: vertical;
     min-height: 100px;
+}
+/* Single Column Top Profiles Styles */
+.container {
+    max-width: 800px; /* Optimal width for single column */
+    padding: 2rem;
+}
+
+.profiles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.profile-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.profile-rank {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #4a5568;
+    color: white;
+    font-weight: bold;
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+}
+
+.profile-info {
+    min-width: 0;
+}
+
+.stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+}
+
+.follow-button {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    background: #48bb78;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+/* Medal colors for top 3 */
+.profile-card:nth-child(1) .profile-rank {
+    background: #f6e05e; /* Gold */
+    color: #2d3748;
+}
+
+.profile-card:nth-child(2) .profile-rank {
+    background: #cbd5e0; /* Silver */
+}
+
+.profile-card:nth-child(3) .profile-rank {
+    background: #ed8936; /* Bronze */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .profile-card {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .profile-info {
+        order: 1;
+    }
+
+    .stats {
+        justify-content: center;
+    }
+
+    .follow-button {
+        width: 100%;
+        order: 2;
+    }
 }

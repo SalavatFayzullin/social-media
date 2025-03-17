@@ -58,6 +58,7 @@ public class AuthController {
     }
 
     public boolean checkIfCanEdit(Long id) {
+        if (SecurityContextHolder.getContext() == null) return false;
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) return false;
         String username = authentication.getName();

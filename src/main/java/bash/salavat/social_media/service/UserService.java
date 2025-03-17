@@ -4,10 +4,16 @@ import bash.salavat.social_media.dto.ProfileEditDTO;
 import bash.salavat.social_media.dto.RegistrationDTO;
 import bash.salavat.social_media.model.User;
 import bash.salavat.social_media.repo.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -18,6 +24,16 @@ public class UserService implements UserDetailsService {
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public Optional<User> getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username);
+    }
+
+    public List<User> getTopUsers(int count) {
+        return userRepository.findTopUsersByFollowers(PageRequest.of(0, count));
     }
 
     public void updateUserProfile(String username, ProfileEditDTO profileEditDTO) {
