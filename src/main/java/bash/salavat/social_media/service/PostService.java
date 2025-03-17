@@ -37,7 +37,7 @@ public class PostService {
 
     public void deletePost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+                .orElseThrow(() -> new RuntimeException("Post not found"));
 
         if (!post.getAuthor().equals(userService.getCurrentUser())) {
             throw new AccessDeniedException("You can't delete this post");
